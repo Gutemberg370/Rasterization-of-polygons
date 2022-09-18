@@ -1,0 +1,9 @@
+#myCanvas {
+  border: 1px solid #000000;
+  background-color: #000000;
+}
+
+#button-div {
+  padding-left: 16px;
+  padding-top: 20px;
+}

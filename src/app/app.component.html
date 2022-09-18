@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <canvas id="myCanvas" width="500" height="400"> </canvas>
+    </div>
+    <div class="col-md-6">
+      <form>
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <label>Resolução (Inoperante)</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputEmail4"
+              placeholder="(1-400)"
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <label>Número de pontos</label>
+            <input
+              type="email"
+              class="form-control"
+              id="inputEmail4"
+              (input)="AddDummyPoints($event)"
+            />
+          </div>
+        </div>
+      </form>
+      <form *ngFor="let point of PointsList; let i = index">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Coordenada X{{ i }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputEmail4"
+              (input)="ChangeXPointPosition($event, i)"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label>Coordenada Y{{ i }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputEmail4"
+              (input)="ChangeYPointPosition($event, i)"
+            />
+          </div>
+        </div>
+      </form>
+      <div id="button-div">
+        <button type="button" class="btn btn-primary" (click)="DrawPoints()">
+          Desenhar a figura
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
