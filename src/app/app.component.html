@@ -1,18 +1,20 @@
 <div class="container">
   <div class="row">
     <div class="col-md-6">
-      <canvas id="myCanvas" width="500" height="400"> </canvas>
+      <canvas id="myCanvas" width="500" height="500"> </canvas>
     </div>
     <div class="col-md-6">
       <form>
         <div class="form-row">
           <div class="form-group col-md-12">
-            <label>Resolução (Inoperante)</label>
+            <label>Resolução</label>
             <input
-              type="text"
+              type="number"
+              value=500
               class="form-control"
               id="inputEmail4"
               placeholder="(1-400)"
+              (input) = "ChangeResolution($event)"
             />
           </div>
         </div>
