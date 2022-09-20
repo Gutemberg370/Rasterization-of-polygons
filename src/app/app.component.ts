@@ -35,7 +35,6 @@ export class AppComponent {
   //Atualiza a variável que indica a resolução
   ChangeResolution(event) {
     var newResolution = Number(event.target.value);
-    console.log(newResolution);
     if(newResolution > 500) {
       alert("insira uma resolução menor do que 500!");
       event.target.value = this.Resolution;
