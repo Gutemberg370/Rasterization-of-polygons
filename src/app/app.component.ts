@@ -8,10 +8,15 @@ import { Drawing } from './Definitions and Logic/Drawing';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  NumberOfPoints = 2;
 
-  PointsList: Point[] = [];
-  PixelList: Point[] = [];
+  NumberOfPoints = 2;
+  PixelSize = 1;
+  Resolution = 500;
+
+  PointsList: Point[] = []; //lista dos pontos de input (para resolução 500 x 500)
+  PixelList: Point[] = [];  //lista dos pontos escalados para a resolução selecionada
+
+  ManipulatedPointslList: Point[] = [];
 
   AddToPointList(x: number, y: number, position: number) {
     const NewPoint = new Point(x, y);
@@ -27,6 +32,28 @@ export class AppComponent {
     }
   }
 
+  //Atualiza a variável que indica a resolução
+  ChangeResolution(event) {
+    var newResolution = Number(event.target.value);
+    console.log(newResolution);
+    if(newResolution > 500) {
+      alert("insira uma resolução menor do que 500!");
+      event.target.value = this.Resolution;
+      return;
+    }
+    else if(newResolution < 0){
+      alert("insira uma resolução maior do que 0!");
+      event.target.value = this.Resolution;
+      return;
+    }
+    //altera a resolução e desenha a tela novamente
+    if (newResolution != 0) {
+      this.Resolution = newResolution;
+      this.PixelSize = Math.ceil( 500 / this.Resolution );
+      this.DrawPoints();
+    }
+  }
+
   // Determinar a posição x de um ponto vindo do input
   ChangeXPointPosition(event, position: number) {
     this.PointsList[position].x = Number(event.target.value);
@@ -38,59 +65,86 @@ export class AppComponent {
   }
 
   // Determinar os pixels correspondentes entre cada dois pontos da lista de pontos
-  DeterminePixels() {
+  DeterminePixelsForBiggerResolution() {
     let Drawer = new Drawing();
 
-    if (this.PointsList.length == 1) {
-      this.PixelList.push(this.PointsList[0]);
+    //caso de apenas 1 ponto
+    if (this.PointsList.length == 1) { 
+      this.PixelList.push(this.ManipulatedPointslList[0]);
     }
 
-    for (let i = 0; i < this.PointsList.length - 1; i++) {
+    //conecta todos os pontos em sequência
+    for (let i = 0; i < this.PointsList.length - 1; i++) { 
       this.PixelList.push.apply(
         this.PixelList,
-        Drawer.rasterization(this.PointsList[i], this.PointsList[i + 1])
+        Drawer.rasterization(this.ManipulatedPointslList[i], this.ManipulatedPointslList[i + 1])
       );
     }
+
+    //fecha polígono
     if (this.PointsList.length > 2) {
       this.PixelList.push.apply(
         this.PixelList,
-        Drawer.rasterization(
-          this.PointsList[0],
-          this.PointsList[this.PointsList.length - 1]
+        Drawer.rasterization(  
+          this.ManipulatedPointslList[0],
+          this.ManipulatedPointslList[this.PointsList.length - 1]
         )
       );
     }
   }
 
-  // Função que realizará todo o desenho
+  // Função que realizará todo o desenho de um polígono
   DrawPoints() {
     // Limpar a lista de pixels de desenhos anteriores
     this.PixelList = [];
-    this.DeterminePixels();
+    this.GeneratePointsInResolution();  //determina os pontos que vão ser rasterizados
+    this.DeterminePixelsForBiggerResolution(); 
+    
 
     const canvas = <HTMLCanvasElement>document.getElementById('myCanvas');
     const ctx = canvas.getContext('2d');
     canvas.width = 500;
-    canvas.height = 400;
+    canvas.height = 500;
 
+    //pega as imagem gerada pelo canvas
     const scannedImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    //pega os pixels da imagem
     const scannedData = scannedImage.data;
 
-    //Apagando desenhos anteriores
+    //Apagando desenhos anteriores da imagem 
     for (let i = 0; i < canvas.width * canvas.height * 4; i++) {
       scannedData[i] = 0;
     }
 
-    this.PixelList.forEach((Point) => {
-      const PositionInCanvas =
-        (Point.x + (canvas.height - Point.y) * canvas.width) * 4;
-      scannedData[PositionInCanvas] = 255;
-      scannedData[PositionInCanvas + 1] = 255;
-      scannedData[PositionInCanvas + 2] = 255;
-      scannedData[PositionInCanvas + 3] = 255;
-    });
+    for (var index = 0; index < this.PixelList.length; index ++) {
+      const pixel = this.PixelList[index];
+
+      //calcula coordenadas do pixel pequeno no canto inferior esquerdo que faz parte do pixel grande
+      var px = this.PixelSize * pixel.x;
+      var py = this.PixelSize * pixel.y;
+
+      for (var x = 0; x < this.PixelSize; x++){         //acessa cada pixel pequeno que faz parte do pixel grande da resolução (forma o pixel da resolução)
+        for (var y = 0; y < this.PixelSize; y++){
+          const PositionInCanvas = ((px + x) + (canvas.height - (py + y)) * canvas.width) * 4;
+          scannedData[PositionInCanvas] = 255;
+          scannedData[PositionInCanvas + 1] = 255;
+          scannedData[PositionInCanvas + 2] = 255;
+          scannedData[PositionInCanvas + 3] = 255;
+        }
+      }
+    }
 
     scannedImage.data.set(scannedData);
     ctx.putImageData(scannedImage, 0, 0);
   }
+
+  //Pega os pontos na resolução 500 e altera para a resolução escolhida
+  GeneratePointsInResolution() {
+    this.ManipulatedPointslList = [];
+    for ( var index = 0; index < this.PointsList.length; index ++ ){
+      const NewPoint = new Point(Math.ceil( (this.PointsList[index].x * this.Resolution)/500 ), Math.ceil( (this.PointsList[index].y * this.Resolution)/500 ));
+      this.ManipulatedPointslList[index] =  NewPoint;
+    }
+  }
+  
 }
