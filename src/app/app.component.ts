@@ -96,7 +96,9 @@ export class AppComponent {
   // Função que realizará todo o desenho de um polígono
   DrawPoints() {
     // Limpar a lista de pixels de desenhos anteriores
+    this.Drawer.pixelList = [];
     this.PixelList = [];
+    this.ManipulatedPointslList = [];
     this.GeneratePointsInResolution(); //determina os pontos que vão ser rasterizados
     this.DeterminePixelsForBiggerResolution();
 
@@ -115,7 +117,8 @@ export class AppComponent {
       scannedData[i] = 0;
     }
 
-    for (var index = 0; index < this.PixelList.length; index++) {
+    var TemporaryPixelLenght = this.PixelList.length;
+    for (var index = 0; index < TemporaryPixelLenght; index++) {
       const pixel = this.PixelList[index];
 
       //calcula coordenadas do pixel pequeno no canto inferior esquerdo que faz parte do pixel grande
@@ -127,11 +130,13 @@ export class AppComponent {
         for (var y = 0; y < this.PixelSize; y++) {
           const PositionInCanvas =
             (px + x + (canvas.height - (py + y)) * canvas.width) * 4;
-          this.PixelList.push(new Point(px + x, py + y));
           scannedData[PositionInCanvas] = 255;
           scannedData[PositionInCanvas + 1] = 255;
           scannedData[PositionInCanvas + 2] = 255;
           scannedData[PositionInCanvas + 3] = 255;
+          if (!this.PixelList.find(p => p.x === (x + px) && p.y === (y + py))){
+            this.PixelList.push(new Point(px + x, py + y));
+          }
         }
       }
     }

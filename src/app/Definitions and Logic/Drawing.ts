@@ -1,3 +1,4 @@
+
 import { Point } from './PointDefinition';
 
 export class Drawing {
@@ -60,23 +61,29 @@ export class Drawing {
     var AnalisedPoint: Point;
 
     for (let Y = 0; Y < Canvas.height; Y++) {
-      for (let X = 0; X < Canvas.width * 4; X += 4) {
-        AnalisedPoint = new Point(X / 4, Y);
+      for (let X = 0; X < Canvas.width; X ++) {
+        AnalisedPoint = new Point(X, Y);
 
         if (Counter == PixelSize) InternalPixels.push(AnalisedPoint);
-        if (PixelList.includes(AnalisedPoint)) Counter++;
+        // if (vendors.find(e => e.Name === 'Magenic'))
+        if (ScannedData[(X + ((Canvas.height - Y)*Canvas.width))*4]==255) Counter++;
         if (Counter == 2 * PixelSize) Counter = 0;
-        if (Counter) InternalPixels = [];
 
-        for (let x = 0; x < Canvas.width * 4; x += 4) {
-          if (InternalPixels.includes(new Point(x, Y))) ScannedData[x] = 255;
-          ScannedData[x + 1] = 255;
-          ScannedData[x + 2] = 255;
-          ScannedData[x + 3] = 255;
-        }
-        console.log(InternalPixels);
-        InternalPixels = [];
       }
+      if (Counter) InternalPixels = [];
+      Counter = 0;
+      for (let x = 0; x < Canvas.width; x ++) {
+          if (InternalPixels.find(p => p.x === x)){
+            const PositionInCanvas = (x + ((Canvas.height - Y)*Canvas.width))*4;
+            ScannedData[PositionInCanvas] = 255;
+            ScannedData[PositionInCanvas + 1] = 255;
+            ScannedData[PositionInCanvas + 2] = 255;
+            ScannedData[PositionInCanvas + 3] = 255;
+          } 
+        }
+        // console.log(InternalPixels);
+        InternalPixels = [];
     }
+    console.log(ScannedData[250500]);
   }
 }
