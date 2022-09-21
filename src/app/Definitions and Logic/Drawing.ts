@@ -66,7 +66,8 @@ export class Drawing {
 
         if (Counter == PixelSize) InternalPixels.push(AnalisedPoint);
         // if (vendors.find(e => e.Name === 'Magenic'))
-        if (ScannedData[(X + ((Canvas.height - Y)*Canvas.width))*4]==255) Counter++;
+        if (ScannedData[(X + ((Canvas.height - Y)*Canvas.width))*4]==255 && ScannedData[(X-1 + ((Canvas.height - Y)*Canvas.width))*4]==0) Counter++;
+        // if (ScannedData[(X + ((Canvas.height - Y)*Canvas.width))*4]==255 && ScannedData[(X-1 + ((Canvas.height - Y)*Canvas.width))*4]==0) Counter++;
         if (Counter == 2 * PixelSize) Counter = 0;
 
       }
