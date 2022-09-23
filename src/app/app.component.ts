@@ -20,6 +20,8 @@ export class AppComponent {
   Drawer = new Drawing();
 
   AddToPointList(x: number, y: number, position: number) {
+    //plano aleatório pode variar de -1000 até 1000
+    //conversão para o plano normal (-1, 1)
     const NewPoint = new Point(x, y);
     this.PointsList[position] = NewPoint;
   }
@@ -46,7 +48,7 @@ export class AppComponent {
       return;
     }
     //altera a resolução e desenha a tela novamente
-    if (newResolution != 0) {
+    if (newResolution != undefined) {
       this.Resolution = newResolution;
       this.PixelSize = Math.ceil(500 / this.Resolution);
       this.DrawPoints();
@@ -55,12 +57,14 @@ export class AppComponent {
 
   // Determinar a posição x de um ponto vindo do input
   ChangeXPointPosition(event, position: number) {
-    this.PointsList[position].x = Number(event.target.value);
+    const normalX = Number(event.target.value)/500;
+    this.PointsList[position].x = normalX ;
   }
 
   // Determinar a posição y de um ponto vindo do input
   ChangeYPointPosition(event, position: number) {
-    this.PointsList[position].y = Number(event.target.value);
+    const normalY = Number(event.target.value)/500;
+    this.PointsList[position].y = normalY;
   }
 
   // Determinar os pixels correspondentes entre cada dois pontos da lista de pontos
@@ -117,33 +121,39 @@ export class AppComponent {
       scannedData[i] = 0;
     }
 
-    var TemporaryPixelLenght = this.PixelList.length;
-    for (var index = 0; index < TemporaryPixelLenght; index++) {
+    var PixelsPainted : Point[] = [];
+    // var TemporaryPixelLenght = this.PixelList.length;
+    for (var index = 0; index < this.PixelList.length; index++) {
       const pixel = this.PixelList[index];
 
       //calcula coordenadas do pixel pequeno no canto inferior esquerdo que faz parte do pixel grande
       var px = this.PixelSize * pixel.x;
       var py = this.PixelSize * pixel.y;
 
-      for (var x = 0; x < this.PixelSize; x++) {
+      for (var y = 0; y < this.PixelSize; y++) {
         //acessa cada pixel pequeno que faz parte do pixel grande da resolução (forma o pixel da resolução)
-        for (var y = 0; y < this.PixelSize; y++) {
+        for (var x = 0; x < this.PixelSize; x++) {
           const PositionInCanvas =
             (px + x + (canvas.height - (py + y)) * canvas.width) * 4;
           scannedData[PositionInCanvas] = 255;
           scannedData[PositionInCanvas + 1] = 255;
           scannedData[PositionInCanvas + 2] = 255;
           scannedData[PositionInCanvas + 3] = 255;
-          if (!this.PixelList.find(p => p.x === (x + px) && p.y === (y + py))){
-            this.PixelList.push(new Point(px + x, py + y));
+          
+          if (!PixelsPainted.find(p => p.x === (x + px) && p.y === (y + py))){
+            PixelsPainted.push(new Point((px + x), (py + y)));
           }
         }
       }
     }
 
+    // scannedImage.data.set(scannedData);
+    // ctx.putImageData(scannedImage, 0, 0);
+
+    this.PixelList = PixelsPainted;
+
     this.Drawer.polygonRasterization(
       this.PixelList,
-      this.PixelSize,
       canvas,
       scannedData
     );
@@ -153,12 +163,16 @@ export class AppComponent {
 
   //Pega os pontos na resolução 500 e altera para a resolução escolhida
   GeneratePointsInResolution() {
-    this.ManipulatedPointslList = [];
+    var xInResolution;
+    var yInResolution;
     for (var index = 0; index < this.PointsList.length; index++) {
-      const NewPoint = new Point(
-        Math.ceil((this.PointsList[index].x * this.Resolution) / 500),
-        Math.ceil((this.PointsList[index].y * this.Resolution) / 500)
-      );
+      xInResolution = ((this.PointsList[index].x + 1) / 2) * this.Resolution;
+      yInResolution = ((this.PointsList[index].y + 1) / 2) * this.Resolution;
+      // const NewPoint = new Point(
+      //   Math.ceil((this.PointsList[index].x * this.Resolution) / 500),
+      //   Math.ceil((this.PointsList[index].y * this.Resolution) / 500)
+      // );
+      const NewPoint = new Point(xInResolution, yInResolution);
       this.ManipulatedPointslList[index] = NewPoint;
     }
   }

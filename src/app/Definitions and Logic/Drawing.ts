@@ -55,7 +55,7 @@ export class Drawing {
     }
   }
 
-  polygonRasterization(PixelList: Point[], PixelSize, Canvas, ScannedData) {
+  polygonRasterization(PixelList: Point[], Canvas, ScannedData) {
     var Counter = 0;
     var InternalPixels: Point[] = [];
     var AnalisedPoint: Point;
@@ -64,11 +64,11 @@ export class Drawing {
       for (let X = 0; X < Canvas.width; X ++) {
         AnalisedPoint = new Point(X, Y);
 
-        if (Counter == PixelSize) InternalPixels.push(AnalisedPoint);
+        if (Counter%2 == 1) InternalPixels.push(AnalisedPoint);
         // if (vendors.find(e => e.Name === 'Magenic'))
-        if (ScannedData[(X + ((Canvas.height - Y)*Canvas.width))*4]==255 && ScannedData[(X-1 + ((Canvas.height - Y)*Canvas.width))*4]==0) Counter++;
+        if (PixelList.find(p => p.x === X && p.y === Y) && !PixelList.find(p => p.x === (X + 1) && p.y === Y)) Counter++;
         // if (ScannedData[(X + ((Canvas.height - Y)*Canvas.width))*4]==255 && ScannedData[(X-1 + ((Canvas.height - Y)*Canvas.width))*4]==0) Counter++;
-        if (Counter == 2 * PixelSize) Counter = 0;
+        if (Counter%2 == 0) Counter = 0;
 
       }
       if (Counter) InternalPixels = [];
@@ -82,9 +82,7 @@ export class Drawing {
             ScannedData[PositionInCanvas + 3] = 255;
           } 
         }
-        // console.log(InternalPixels);
         InternalPixels = [];
     }
-    console.log(ScannedData[250500]);
   }
 }
