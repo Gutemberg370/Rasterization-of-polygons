@@ -20,8 +20,6 @@ export class AppComponent {
   Drawer = new Drawing();
 
   AddToPointList(x: number, y: number, position: number) {
-    //plano aleatório pode variar de -1000 até 1000
-    //conversão para o plano normal (-1, 1)
     const NewPoint = new Point(x, y);
     this.PointsList[position] = NewPoint;
   }
@@ -50,7 +48,7 @@ export class AppComponent {
     //altera a resolução e desenha a tela novamente
     if (newResolution != undefined) {
       this.Resolution = newResolution;
-      this.PixelSize = Math.ceil(500 / this.Resolution);
+      this.PixelSize = Math.floor(500 / this.Resolution);
       this.DrawPoints();
     }
   }
@@ -122,7 +120,7 @@ export class AppComponent {
     }
 
     var PixelsPainted : Point[] = [];
-    // var TemporaryPixelLenght = this.PixelList.length;
+
     for (var index = 0; index < this.PixelList.length; index++) {
       const pixel = this.PixelList[index];
 
@@ -147,9 +145,6 @@ export class AppComponent {
       }
     }
 
-    // scannedImage.data.set(scannedData);
-    // ctx.putImageData(scannedImage, 0, 0);
-
     this.PixelList = PixelsPainted;
 
     this.Drawer.polygonRasterization(
@@ -157,6 +152,7 @@ export class AppComponent {
       canvas,
       scannedData
     );
+
     scannedImage.data.set(scannedData);
     ctx.putImageData(scannedImage, 0, 0);
   }
@@ -168,10 +164,6 @@ export class AppComponent {
     for (var index = 0; index < this.PointsList.length; index++) {
       xInResolution = ((this.PointsList[index].x + 1) / 2) * this.Resolution;
       yInResolution = ((this.PointsList[index].y + 1) / 2) * this.Resolution;
-      // const NewPoint = new Point(
-      //   Math.ceil((this.PointsList[index].x * this.Resolution) / 500),
-      //   Math.ceil((this.PointsList[index].y * this.Resolution) / 500)
-      // );
       const NewPoint = new Point(xInResolution, yInResolution);
       this.ManipulatedPointslList[index] = NewPoint;
     }

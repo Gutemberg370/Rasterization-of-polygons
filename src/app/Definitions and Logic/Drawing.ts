@@ -5,8 +5,8 @@ export class Drawing {
   pixelList = [];
 
   produceFragment(point: Point) {
-    const xm = Math.ceil(point.x);
-    const ym = Math.ceil(point.y);
+    const xm = Math.floor(point.x);
+    const ym = Math.floor(point.y);
     const pixel = new Point(xm, ym);
     this.pixelList.push(pixel);
   }
