@@ -8,6 +8,8 @@ import { Drawing } from './Definitions and Logic/Drawing';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
+  ValidResolution = true;
+
   NumberOfPoints = 2;
   PixelSize = 1;
   Resolution = 500;
@@ -40,13 +42,14 @@ export class AppComponent {
       alert('insira uma resolução menor do que 500!');
       event.target.value = this.Resolution;
       return;
-    } else if (newResolution < 0) {
-      alert('insira uma resolução maior do que 0!');
-      event.target.value = this.Resolution;
+    } else if (newResolution < 50 && this.ValidResolution) {
+      alert('insira uma resolução maior do que 50!');
+      this.ValidResolution = false;
       return;
     }
     //altera a resolução e desenha a tela novamente
-    if (newResolution != undefined) {
+    if (newResolution != undefined && newResolution > 49) {
+      this.ValidResolution = true;
       this.Resolution = newResolution;
       this.PixelSize = Math.floor(500 / this.Resolution);
       this.DrawPoints();
@@ -111,7 +114,6 @@ export class AppComponent {
 
     //pega as imagem gerada pelo canvas
     const scannedImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    //pega os pixels da imagem
     const scannedData = scannedImage.data;
 
     //Apagando desenhos anteriores da imagem
