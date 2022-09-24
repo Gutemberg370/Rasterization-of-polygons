@@ -46,10 +46,11 @@ export class AppComponent implements OnInit{
   ChangeResolution() {
 
     let newResolution = Number((<HTMLInputElement>document.getElementById("inputResolution")).value);
-    console.log(newResolution);
+    //console.log(newResolution);
     if (newResolution > 500) {
       alert('insira uma resolução menor do que 500!');
       //event.target.value = this.Resolution;
+      this.ValidResolution = false;
       return;
     } else if (newResolution < 50) {
       alert('insira uma resolução maior do que 50!');
@@ -57,7 +58,7 @@ export class AppComponent implements OnInit{
       return;
     }
     //altera a resolução
-    if (newResolution != undefined && newResolution > 49) {
+    if (newResolution < 501 && newResolution > 49) {
       this.ValidResolution = true;
       this.Resolution = newResolution;
       this.PixelSize = Math.floor(500 / this.Resolution);

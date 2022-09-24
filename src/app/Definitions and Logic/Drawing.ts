@@ -56,9 +56,9 @@ export class Drawing {
   }
 
   polygonRasterization(PixelList: Point[], Canvas, ScannedData) {
-    var Counter = 0;
-    var InternalPixels: Point[] = [];
-    var AnalisedPoint: Point;
+    let Counter = 0;
+    let InternalPixels: Point[] = [];
+    let AnalisedPoint: Point;
 
     for (let Y = 0; Y < Canvas.height; Y++) {
       for (let X = 0; X < Canvas.width; X ++) {
@@ -72,7 +72,6 @@ export class Drawing {
 
       }
       if (Counter) InternalPixels = [];
-      Counter = 0;
       for (let x = 0; x < Canvas.width; x ++) {
           if (InternalPixels.find(p => p.x === x)){
             const PositionInCanvas = (x + ((Canvas.height - Y)*Canvas.width))*4;
@@ -80,8 +79,9 @@ export class Drawing {
             ScannedData[PositionInCanvas + 1] = 255;
             ScannedData[PositionInCanvas + 2] = 255;
             ScannedData[PositionInCanvas + 3] = 255;
-          } 
+          }
         }
+        Counter = 0;
         InternalPixels = [];
     }
   }
