@@ -9,12 +9,11 @@
           <div class="form-group col-md-12">
             <label>Resolução</label>
             <input
-              type="text"
+              type="number"
               value="500"
               class="form-control"
-              id="inputEmail4"
+              id="inputResolution"
               placeholder="(50-500)"
-              (input) = "ChangeResolution($event)"
             />
           </div>
         </div>
@@ -22,7 +21,7 @@
           <div class="form-group col-md-12">
             <label>Número de pontos</label>
             <input
-              type="email"
+              type="text"
               class="form-control"
               id="inputEmail4"
               (input)="AddDummyPoints($event)"
@@ -52,10 +51,15 @@
           </div>
         </div>
       </form>
-      <div id="button-div">
-        <button type="button" class="btn btn-primary" (click)="DrawPoints()">
-          Desenhar a figura
-        </button>
+      <div  class="row">
+        <div id ="drawButtons" class="btn-toolbar">
+          <button type="button" class="col-md-4 btn btn-primary" (click)="ChangeResolution(); DrawPoints()">
+            Desenhar a(s) figura(s)
+          </button>
+          <button type="button" id = "resetCanvas" class="col-md-3 btn btn-primary" (click)="ResetCanvas()">
+            Apagar o quadro
+          </button>
+      </div>
       </div>
     </div>
   </div>
