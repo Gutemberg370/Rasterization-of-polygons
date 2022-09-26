@@ -1,9 +1,16 @@
+.container {
+  padding-top: 40px;
+}
+
 #myCanvas {
   border: 1px solid #000000;
   background-color: #000000;
 }
 
-#button-div {
-  padding-left: 16px;
-  padding-top: 20px;
+#drawButtons {
+  padding-left: 60px;
+}
+
+#resetCanvas {
+  margin-left: 100px;
 }

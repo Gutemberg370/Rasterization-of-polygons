@@ -10,11 +10,10 @@
             <label>Resolução</label>
             <input
               type="number"
-              value=500
+              value="500"
               class="form-control"
-              id="inputEmail4"
-              placeholder="(1-400)"
-              (input) = "ChangeResolution($event)"
+              id="inputResolution"
+              placeholder="(50-500)"
             />
           </div>
         </div>
@@ -22,9 +21,9 @@
           <div class="form-group col-md-12">
             <label>Número de pontos</label>
             <input
-              type="email"
+              type="number"
               class="form-control"
-              id="inputEmail4"
+              id="inputPoints"
               (input)="AddDummyPoints($event)"
             />
           </div>
@@ -35,27 +34,32 @@
           <div class="form-group col-md-6">
             <label>Coordenada X{{ i }}</label>
             <input
-              type="text"
+              type="number"
               class="form-control"
-              id="inputEmail4"
+              id="inputXPoint"
               (input)="ChangeXPointPosition($event, i)"
             />
           </div>
           <div class="form-group col-md-6">
             <label>Coordenada Y{{ i }}</label>
             <input
-              type="text"
+              type="number"
               class="form-control"
-              id="inputEmail4"
+              id="inputYPoint"
               (input)="ChangeYPointPosition($event, i)"
             />
           </div>
         </div>
       </form>
-      <div id="button-div">
-        <button type="button" class="btn btn-primary" (click)="DrawPoints()">
-          Desenhar a figura
-        </button>
+      <div  class="row">
+        <div id ="drawButtons" class="btn-toolbar">
+          <button type="button" class="col-md-4 btn btn-primary" (click)="ChangeResolution(); DrawFigures()">
+            Desenhar a(s) figura(s)
+          </button>
+          <button type="button" id = "resetCanvas" class="col-md-3 btn btn-primary" (click)="ResetCanvas()">
+            Apagar o quadro
+          </button>
+      </div>
       </div>
     </div>
   </div>
